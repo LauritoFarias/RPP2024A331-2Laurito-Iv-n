@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo Parcial</title>
+
+    <script>
+
+        let arrayPersonas;
+
+        let arrayTabla;
+
+        function cargar_datos(){
+
+            const stringArrayPersonas = '[{"id":1, "nombre":"Marcelo", "apellido":"Luque", "edad":45, "titulo":"Ingeniero", "facultad":"UTN",\
+            "añoGraduacion":2002},{"id":2, "nombre":"Ramiro", "apellido":"Escobar", "edad":35, "titulo":"Medico",\
+            "facultad":"UBA", "añoGraduacion":20012},{"id":3, "nombre":"Facundo", "apellido":"Cairo", "edad":30,\
+            "titulo":"Abogado", "facultad":"UCA", "añoGraduacion":2017},{"id":4, "nombre":"Fernando", "apellido":"Nieto",\
+            "edad":18, "equipo":"Independiente", "posicion":"Delantero", "cantidadGoles":7},{"id":5, "nombre":"Manuel",\
+            "apellido":"Loza", "edad":20, "equipo":"Racing", "posicion":"Volante", "cantidadGoles":2},{"id":6, "nombre":"Nicolas",\
+            "apellido":"Serrano", "edad":23, "equipo":"Boca", "posicion":"Arquero", "cantidadGoles":0}]';
+
+            var tablaPersonas = document.getElementById('tabla-personas');
+
+            class Persona{
+                #id;
+                #nombre;
+                #apellido;
+                #edad;  //Mayor a 15
+
+                constructor(id, nombre, apellido, edad){
+                    this.id = id;
+                    this.nombre = nombre;
+                    this.apellido = apellido;
+                    this.edad = edad;
+                }
+
+                toString(){
+                    return `ID: ${this.id}.\n
+                    Nombre: ${this.nombre}.\n
+                    Apellido: ${this.apellido}.\n
+                    Edad: ${this.edad}.`;
+                }
+
+                toJSON(){
+                    return JSON.stringify(this);
+                }
+            }
+
+            class Futbolista extends Persona{
+                #equipo;
+                #posicion;
+                #cantidadGoles;
+
+                constructor(id, nombre, apellido, edad, equipo, posicion, cantidadGoles){
+                    super(id, nombre, apellido, edad);
+                    this.equipo = equipo;
+                    this.posicion = posicion;
+                    this.cantidadGoles = cantidadGoles;
+                }
+
+                toString(){
+                    var stringDatosPersona = super.toString();
+
+                    var stringDatosFutbolista = `Equipo: ${this.equipo}.\n
+                    Posición: ${this.posicion}.\n
+                    Cantidad de goles: ${this.cantidadGoles}.\n`;
+
+                    return stringDatosPersona + stringDatosFutbolista;
+                }
+            }
+
+            class Profesional extends Persona{
+                #titulo;
+                #facultad;
+                #anioGraduacion;
+
+                constructor(id, nombre, apellido, edad, titulo, facultad, anioGraduacion){
+                    super(id, nombre, apellido, edad);
+                    this.titulo = titulo;
+                    this.facultad = facultad;
+                    this.anioGraduacion = anioGraduacion;
+                }
+
+                toString(){
+                    var stringDatosPersona = super.toString();
+
+                    var stringDatosProfesional = `Título: ${this.titulo}.\n
+                    Facultad: ${this.facultad}.\n
+                    Año de graduación: ${this.anioGraduacion}.\n`;
+
+                    return stringDatosPersona + stringDatosProfesional;
+                }
+            }
+
+            var arrayPrimitivo = JSON.parse(stringArrayPersonas);
+
+            console.log(arrayPrimitivo);
+
+            var arrayPersonas = arrayPrimitivo.map((elemento, indice, array)=>{
+                if (elemento.hasOwnProperty("equipo")){
+                    return new Futbolista(elemento.id, elemento.nombre, elemento.apellido, elemento.edad, elemento.equipo, elemento.posicion, elemento.cantidadGoles);
+                }else{
+                    return new Profesional(elemento.id, elemento.nombre, elemento.apellido, elemento.edad, elemento.titulo, elemento.facultad, elemento.anioGraduacion);
+                }
+            });
+
+            arrayTabla = arrayPersonas;
+
+            function cargar_tabla(array){
+                tablaPersonas.innerHTML = "";
+
+                array.forEach(objeto=>{
+
+                    var fila = document.createElement('tr');
+
+                    var celdaId = document.createElement('td');
+                    celdaId.textContent = objeto.id;
+                    fila.appendChild(celdaId);
+
+                    var celdaNombre = document.createElement('td');
+                    celdaNombre.textContent = objeto.nombre;
+                    fila.appendChild(celdaNombre);
+
+                    var celdaApellido = document.createElement('td');
+                    celdaApellido.textContent = objeto.apellido;
+                    fila.appendChild(celdaApellido);
+
+                    var celdaEdad = document.createElement('td');
+                    celdaEdad.textContent = objeto.edad;
+                    fila.appendChild(celdaEdad);
+
+                    if(objeto instanceof Futbolista){
+                        var celdaEquipo = document.createElement('td');
+                        celdaEquipo.textContent = objeto.equipo;
+                        fila.appendChild(celdaEquipo);
+
+                        var celdaPosicion = document.createElement('td');
+                        celdaPosicion.textContent = objeto.posicion;
+                        fila.appendChild(celdaPosicion);
+
+                        var celdaCantidadGoles = document.createElement('td');
+                        celdaCantidadGoles.textContent = objeto.CantidadGoles;
+                        fila.appendChild(celdaCantidadGoles);
+
+                        var celdaTitulo = document.createElement('td');
+                        celdaTitulo.textContent = "-";
+                        fila.appendChild(celdaTitulo);
+
+                        var celdaFacultad = document.createElement('td');
+                        celdaFacultad.textContent = "-";
+                        fila.appendChild(celdaFacultad);
+
+                        var celdaAnioGraduacion = document.createElement('td');
+                        celdaAnioGraduacion.textContent = "-";
+                        fila.appendChild(celdaAnioGraduacion);
+
+                    }else{
+                        var celdaEquipo = document.createElement('td');
+                        celdaEquipo.textContent = "-";
+                        fila.appendChild(celdaEquipo);
+
+                        var celdaPosicion = document.createElement('td');
+                        celdaPosicion.textContent = "-";
+                        fila.appendChild(celdaPosicion);
+
+                        var celdaCantidadGoles = document.createElement('td');
+                        celdaCantidadGoles.textContent = "-";
+                        fila.appendChild(celdaCantidadGoles);
+
+                        var celdaTitulo = document.createElement('td');
+                        celdaTitulo.textContent = objeto.titulo;
+                        fila.appendChild(celdaTitulo);
+
+                        var celdaFacultad = document.createElement('td');
+                        celdaFacultad.textContent = objeto.facultad;
+                        fila.appendChild(celdaFacultad);
+
+                        var celdaAnioGraduacion = document.createElement('td');
+                        celdaAnioGraduacion.textContent = objeto.anioGraduacion;
+                        fila.appendChild(celdaAnioGraduacion);
+                    }
+
+                    tablaPersonas.appendChild(fila);
+
+                });
+            };
+            
+            function filtrarArray(tipo){
+                if (tipo == "2")
+                {
+                    console.log("hola");
+                    arrayTabla = arrayPersonas.filter((elemento, indice, array) => {
+                    return elemento instanceof Futbolista;
+                    });
+                } else if (tipo == "3"){
+                    arrayTabla = arrayPersonas.filter((elemento, indice, array) => {
+                    return elemento instanceof Profesional;
+                    });
+                }
+            };
+
+            const menuFiltrar = document.getElementById('filtro-tipo');
+            menuFiltrar.addEventListener('change', ()=>{
+                var opcion = menuFiltrar.value;
+                filtrarArray(opcion);
+                cargar_tabla(arrayTabla);
+            });
+
+            const menuTipo = document.getElementById("anadir-tipo");
+            menuTipo.addEventListener("click", () => {
+                var opcion = menuTipo.value;
+            })
+
+            cargar_tabla(arrayTabla);
+
+            var tabla = document.getElementById('tabla-personas');
+            var formulario = document.getElementById('formulario-abm');
+            var atributosFutbolistas = document.getElementById("atributos-futbolistas");
+            var atributosProfesionales = document.getElementById("atributos-profesionales");
+
+            formulario.style.display = 'none';
+            atributosFutbolistas.style.display = 'none';
+            atributosProfesionales.style.display = 'none';
+            
+            if (tabla.style.display === 'none') {
+                console.log('El tabla está oculto.');
+            } else {
+                console.log('El tabla está visible.');
+            }
+            if (formulario.style.display === 'none') {
+                console.log('El formulario está oculto.');
+            } else {
+                console.log('El formulario está visible.');
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", cargar_datos);
+
+    </script>
+</head>
+<body>
+    <section id="ver-datos">
+
+        <h1>Formulario de Datos</h1>
+        <label for="filtro-tipo">Filtrar por:</label>
+        <select id="filtro-tipo" name="filtrar-por">
+            <option value = "1">Todos</option>
+            <option value = "2">Futbolista</option>
+            <option value = "3">Profesional</option>
+        </select>
+
+        <label for="chk-id">ID</label>
+        <input type="checkbox" id="chk-id" name="atributo" value="1" checked>
+        <label for="chk-nombre">nombre</label>
+        <input type="checkbox" id="chk-nombre" name="atributo" value="1" checked>
+        <label for="chk-apellido">Apellido</label>
+        <input type="checkbox" id="chk-apellido" name="atributo" value="1" checked>
+        <label for="chk-edad">Edad</label>
+        <input type="checkbox" id="chk-edad" name="atributo" value="1" checked>
+        <label for="chk-equipo">Equipo</label>
+        <input type="checkbox" id="chk-equipo" name="atributo" value="1" checked>
+        <label for="chk-posicion">Posición</label>
+        <input type="checkbox" id="chk-posicion" name="atributo" value="1" checked>
+        <label for="chk-cantGoles">CantGoles</label>
+        <input type="checkbox" id="chk-cantGoles" name="atributo" value="1" checked>
+        <label for="chk-titulo">Título</label>
+        <input type="checkbox" id="chk-titulo" name="atributo" value="1" checked>
+        <label for="chkfacultad">Facultad</label>
+        <input type="checkbox" id="chkfacultad" name="atributo" value="1" checked>
+        <label for="chk-anioGrad">AñoGrad</label>
+        <input type="checkbox" id="chk-anioGrad" name="atributo" value="1" checked>
+
+        <label for="calcular-promedio">Calcular Edad Promedio:</label>
+        <input id="calcular-promedio" type="text" id="resultado" value="0" readonly>
+        
+        <button onclick="mostrar_resultado_edad()">Calcular</button>
+
+        <table id="tabla">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Edad</th>
+                    <th>Equipo</th>
+                    <th>Posición</th>
+                    <th>CantGoles</th>
+                    <th>Titulo</th>
+                    <th>Facultad</th>
+                    <th>AñoGrad</th>
+                </tr>
+            </thead>
+            <tbody ondblclick="mostrar_form_abm()" id="tabla-personas">
+                
+            </tbody>
+        </table>
+
+    </section>
+
+    <section id="form-enviar-datos">
+
+        <button ondblclick="mostrar_form_abm()">Agregar</button>
+        <div id="formulario-abm">
+            <h1>Formulario ABM</h1>
+            <form id ="mi_form">
+                <label for="txt_id">ID:</label>
+                <input type="text" id="txt_id" name="id"><br>
+                <label for="txt_nombre">Nombre:</label>
+                <input type="text" id="txt_nombre" name="nombre"><br>
+                <label for="txt_apellido">Apellido:</label>
+                <input type="text" id="txt_apellido" name="apellido"><br>
+                <label for="txt_edad">Edad:</label>
+                <input type="text" id="txt_edad" name="edad"><br>
+                <select id="anadir-tipo" name="tipo-persona" onchange="mostrar_atributos_especificos()">
+                    <option value ="1">Todos</option>
+                    <option value ="2">Futbolista</option>
+                    <option value ="3">Profesional</option>
+                </select>
+                <div id="atributos-especificos">
+                    <div id="atributos-futbolistas">
+                        <label for="txt_equipo">Equipo:</label>
+                        <input type="text" id="txt_equipo" name="equipo"><br>
+                        <label for="txt_posicion">Posición:</label>
+                        <input type="text" id="txt_posicion" name="posicion"><br>
+                        <label for="txt_cantGoles">Cantidad de goles:</label>
+                        <input type="text" id="txt_cantGoles" name="cant_goles"><br>
+                    </div>
+                    <div id="atributos-profesionales">
+                        <label for="txt_titulo">Título:</label>
+                        <input type="text" id="txt_titulo" name="titulo"><br>
+                        <label for="txt_facultad">Facultad:</label>
+                        <input type="text" id="txt_facultad" name="facultad"><br>
+                        <label for="txt_anioGrad">AñoGrad:</label>
+                        <input type="text" id="txt_anioGrad" name="anioGrad"><br>
+                    </div>
+                </div>
+                <div id="botones-form">
+                    <button onclick="agregar_form()" id="form-agregar">Agregar</button>
+                    <button id="form-modificar">Modificar</button>
+                    <button id="form-eliminar">Eliminar</button>
+                    <button id="form-cancelar">Cancelar</button>
+                </div>
+                
+            </form>
+        </div>
+
+    </section>
+
+    <script>
+        function calcular_edad_promedio(){
+            if (typeof arrayTabla !== 'undefined'){
+                console.log(arrayTabla);
+                sumatoria = arrayTabla.reduce((valor, elemento, indice, array) => {
+                    return valor + elemento.edad;
+                }, 0);
+                return sumatoria / arrayTabla.length;
+            }else{
+                console.log(arrayTabla);
+                sumatoria = arrayTabla.reduce((valor, elemento, indice, array) => {
+                    return valor + elemento.edad;
+                }, 0);
+                return sumatoria / arrayTabla.length;
+            }
+        };
+
+        function mostrar_resultado_edad(){
+            resultado = calcular_edad_promedio();
+            document.getElementById("calcular-promedio").value = resultado;
+        }
+        
+        function mostrar_form_abm(){
+            var tabla = document.getElementById('tabla');
+            var formulario = document.getElementById('formulario-abm');
+            if (formulario.style.display == 'none'){
+                tabla.style.display = 'none';
+                formulario.style.display = 'block';
+            }else{
+                tabla.style.display = 'table';
+                formulario.style.display = 'none';
+            };
+        }
+
+        function mostrar_atributos_especificos(){
+            var atributosFutbolistas = document.getElementById("atributos-futbolistas");
+            var atributosProfesionales = document.getElementById("atributos-profesionales");
+            var menuSeleccion = document.getElementById("anadir-tipo");
+
+            if (menuSeleccion.value == "2"){
+                atributosFutbolistas.style.display = 'block';
+                atributosProfesionales.style.display = 'none';
+            }
+            else if (menuSeleccion.value == "3"){
+                atributosFutbolistas.style.display = 'none';
+                atributosProfesionales.style.display = 'block';
+            }
+        }
+
+        function agregar_form(){
+            var tipo = document.getElementById("anadir-tipo");
+
+            var id = document.getElementById("txt_id");
+            var edad = document.getElementById("txt_edad");
+            var nombre = document.getElementById("txt_nombre");
+            var apellido = document.getElementById("txt_apellido");
+
+            if (tipo == 2){
+                var equipo = document.getElementById("txt_equipo");
+                var posicion = document.getElementById("txt_posicion");
+                var cantGoles = document.getElementById("txt_cantGoles");
+
+                //let personaNueva = new Futbolista();
+
+            } else if (tipo == 3){
+                var titulo = document.getElementById("txt_titulo");
+                var facultad = document.getElementById("txt_facultad");
+                var anioGrad = document.getElementById("txt_anioGrad");
+            }
+
+
+        }
+
+    </script>
+
+</body>
+</html>

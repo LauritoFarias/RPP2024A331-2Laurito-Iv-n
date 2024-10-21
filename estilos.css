@@ -1,0 +1,15 @@
+#tabla{
+    border: 3px solid black;
+}
+
+td, th {
+    border: 1px solid black;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/*
+#formulario-abm{
+    display: none;
+}
+*/
